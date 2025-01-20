@@ -1,6 +1,6 @@
-# 04_07_challenge_develop_a_deployment_pipeline
+# Simulate_deployment_pipeline
 
-It's time for a challenge!
+# Situation:
 
 Your team is excited to use GitHub Actions for their next project.
 
@@ -12,16 +12,16 @@ To start, the workflow jobs are being run in the wrong order.  And while some of
 
 They’ve asked you to help them straighten out the pipeline, set up more control for deployment to particular environments, and provide a summary once the pipeline completes.
 
-# Requirements
+# Steps 
 1. Create a new repo and add the exercise files. Run and observe the provided workflow.
-1. Edit the workflow to place the jobs in order.
-1. Configure the following environments:
+2. Edit the workflow to place the jobs in order.
+3. Configure the following environments:
 
     - Development
     - Staging
     - Production
 
-1. Use continuous deployment for the Development and Staging environments.
-1. Protect deployments to the Production environment with a review.
-1. Update the summary to indicate all jobs have completed successfully.
+4. Use continuous deployment for the Development and Staging environments.
+5. Protect deployments to the Production environment with a review.
+6. Update the summary to indicate all jobs have completed successfully.
 

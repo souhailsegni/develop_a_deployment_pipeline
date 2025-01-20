@@ -1,4 +1,9 @@
-name: Initial Deployment Pipeline
+# Before start we need to Configure the following environments:
+#   - Development
+#   - Staging
+#   - Production
+# well ordering the jobs is crucial in process
+name: Final Deployment Pipeline
 on:
   workflow_dispatch:
   push:
@@ -12,41 +17,47 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: echo "- Lint the code and run unit tests"
-        
+
   build:
+    needs: [integration]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - run: echo "- Build the artifact"
 
   test-artifact:
-    needs: build
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - run: echo "- Simulate and test the artifact"
-
+  #continuous deployment for the Development env
   development:
+    environment: Development
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - run: echo "- Auto-deploy the artifact to the development environment"
-        
+  #deployment for the Staging environment
   staging:
+    environment: Staging
+    needs: [development, test-artifact]
     runs-on: ubuntu-latest
     steps:
       - run: |
           echo "After development envirionment is deployed..."
           echo "and after the artifact tests have passed..."
           echo "- Auto-deploy the artifact to the staging environment"
-        
+
   test-staging:
     needs: staging
     runs-on: ubuntu-latest
     steps:
       - run: echo "- Test the staging environment"
-        
+  #Protect deployments to the Production environment with a review with adding rule (required reviewer)
   production:
-    needs: staging
+    environment: Production
+    needs: [test-staging]
     runs-on: ubuntu-latest
     steps:
       - run: |
@@ -56,7 +67,8 @@ jobs:
           echo "- Deploy the artifact to the production environment"
 
   test-production:
+    needs: [production]
     runs-on: ubuntu-latest
     steps:
       - run: echo "- Test the artifact in the production environment"
-      - run: echo "# All tests and deployments have completed successfully!"s
+      - run: echo "# Everything completed successfully!" >> $GITHUB_STEP_SUMMARY  #summary to indicate all jobs have completed successfully with GITHUB_STEP_SUMMARY 
